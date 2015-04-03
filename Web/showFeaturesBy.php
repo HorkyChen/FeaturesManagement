@@ -13,10 +13,10 @@ require('common.php');
 // Check the query string.
 parse_str($_SERVER['QUERY_STRING'], $params);
 
-if($params['team_id']) {
+if(array_key_exists('team_id',$params)) {
     showFeaturesByTeamID($params['team_id']);
 }
-else if($params['layer_id']) {
+else if(array_key_exists('layer_id',$params)) {
     showFeaturesByLayerID($params['layer_id']);
 }
 
@@ -28,7 +28,8 @@ function showFeaturesByTeamID($team_id) {
 
 function showFeaturesByLayerID($layer_id) {
     $array = array("ID","Feature","Owner","Project");
-    // To be implemented.
+    $query = "SELECT ID, FeatureName,CurrentOwner,Project FROM Features WHERE ID in (SELECT FeatureID FROM FeatureLayer where ModulesID=".$layer_id.")";
+    showQueryInTable($array, $query);
 }
 ?>
 

@@ -20,6 +20,7 @@
 require('common.php');
 
 $teams = getTableData("select * from TeamList");
+$modules = getTableData("select * from ModuleList");
 
 echo 'Tracking Features:<br/>';
 $array = array("ID","Feature","Reason","Project");
@@ -48,7 +49,9 @@ function showFeaturesByTeamID($team_id) {
     
     function initialize() {
         var teams = <?php echo $teams; ?>;
+        var modules = <?php echo $modules; ?>;
         setSelectionOptions(teams,"team_list");
+        setSelectionOptions(modules,"layer_list");
     }
     
     function setSelectionOptions(list, id) {
@@ -58,19 +61,21 @@ function showFeaturesByTeamID($team_id) {
         }
     }
 
-    function onItemSelected(selectID) {
+    function onItemSelected(selectID, targetFieldID) {
         selectElement = document.getElementById(selectID);
-        teamID = selectElement.options[selectElement.selectedIndex].value;
-        document.getElementById("team_features").src="showFeaturesBy.php?team_id="+teamID;
+        selectedValue = selectElement.options[selectElement.selectedIndex].value;
+        document.getElementById("features_list").src="showFeaturesBy.php?"+targetFieldID+"="+selectedValue;
     }
 
 </script>
 <br/>
 <p>
-    Team List:<select id="team_list" onchange="onItemSelected('team_list')">
+    Team List:<select id="team_list" onchange="onItemSelected('team_list','team_id')">
+    </select>
+    <br/> or Layer List:<select id="layer_list" onchange="onItemSelected('layer_list','layer_id')">
     </select>
 </p>
-<iframe id="team_features" frameBorder="0" src="showFeaturesBy.php?team_id=1" height="300" width="400"/>
+<iframe id="features_list" frameBorder="0" src="showFeaturesBy.php?team_id=1" height="300" width="400"/>
 </body>
 </html>
     
