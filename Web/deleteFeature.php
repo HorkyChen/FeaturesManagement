@@ -7,7 +7,7 @@
     </head>
 <body>
 <p>
-    <button onclick="history.back()">返回</button>
+    <button onclick="history.back()">Back</button>
 </p>
 <?php
 require('common.php');

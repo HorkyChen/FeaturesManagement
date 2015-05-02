@@ -7,7 +7,8 @@
     </head>
 <body>
 <p>
-    <button onclick="history.back()">返回</button>
+    <button onclick="history.back()">Back</button>
+    <button onclick="doModify();">Edit</button>
 </p>
 <?php
 require('common.php');
@@ -16,7 +17,7 @@ if($params['id']) {
    $feature_ID = $params['id'];
    echo 'Features Information:<br/>';
    $array = array("ID","Feature","Description","Project","Design Document",
-                  "Tracked?","Why to track","Team", "First Developer","Current Owner");
+                  "Tracked?","Why to track","Team", "First Developer","Current Owner","Status");
    $query = 'SELECT * FROM feature_info WHERE ID=='.$feature_ID;
    showRowInTable($array, $query);
    
@@ -35,11 +36,23 @@ if($params['id']) {
    $query = 'SELECT b.ID, b.FeatureName from Dependencies as a,Features as b where a.FeatureID=b.ID and DependedID='.$feature_ID;
    showQueryInTable($array, $query);
 } else {
-   echo '未指定任何Feature.';    
+   echo 'Not specified any feature.';    
 }
 
 ?>
 
+<script type="text/javascript">
+ function doModify() {
+    document.location = 'addFeatureUI.php?id='+getParameterByName('id');
+ }
+ 
+ function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+</script>
 </body>
 </html>
     
