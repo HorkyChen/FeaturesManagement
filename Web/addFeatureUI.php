@@ -11,9 +11,9 @@
     $teams = getTableData("select * from TeamList");
     $modules = getTableData("select * from ModuleList");
     $features = getTableData("select ID,FeatureName from Features");
-    
+
     parse_str($_SERVER['QUERY_STRING'], $params);
-    if(array_key_exists('id',$params) && $params['id']) {
+    if(array_key_exists('id',$params) && $params['id'] >= 0) {
       $target_featureID = $params['id'];
       $feature_data = getTableData("SELECT * FROM features WHERE ID==".$target_featureID);
       $feature_modules = getTableData("SELECT ModulesID FROM featurelayer WHERE FeatureID==".$target_featureID);
@@ -91,7 +91,7 @@
                         <option value="1">Developed</option>
                 </select>
                 </td>
-            </tr>      
+            </tr>
         </tbody>
     </table>
     <INPUT type="submit" value="Submit"> <INPUT type="reset">
@@ -106,7 +106,7 @@ function initialize() {
     setSelectionOptions(teams,"team_list");
     setSelectionOptions(features, "features_list");
     setSelectionOptions(modules, "implementation_layers")
-    
+
     var target_featureID = <?php echo $target_featureID; ?>;
     if (target_featureID != -1) {
         // Show detail data.
@@ -122,15 +122,16 @@ function initialize() {
         document.getElementById("tracking_reason").value = feature_data[0]["TrackingReason"];
         document.getElementById("first_developer").value = feature_data[0]["FirstOwner"];
         document.getElementById("current_owner").value = feature_data[0]["CurrentOwner"];
-        
+        document.getElementById("team_id").value = feature_data[0]["TeamID"];
+
         teamElement = document.getElementById("team_list");
         teamElement.options[feature_data[0]["TeamID"]].selected = true;
         teamElement = document.getElementById("develop_state");
         teamElement.options[feature_data[0]["Status"]].selected = true;
-        
+
         setSelectedOptions(feature_modules,"implementation_layers");
         setSelectedOptions(feature_depend,"features_list");
-        
+
         onItemSelected('team_list','team_id');
         onItemSelected('implementation_layers','layers_id');
         onItemSelected('features_list','features_id');
@@ -160,7 +161,7 @@ function setSelectionOptions(list, id) {
 function onItemSelected(selectID,inputID) {
     selectElement = document.getElementById(selectID);
     inputElement = document.getElementById(inputID);
-    
+
     updateSelectedValueToInput(selectElement, inputElement);
 }
 
